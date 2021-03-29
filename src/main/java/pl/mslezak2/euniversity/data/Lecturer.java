@@ -1,15 +1,16 @@
 package pl.mslezak2.euniversity.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Lecturer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userId;
+
+    @OneToOne
+    private Credentials credentials;
+
     private long employeeId;
 
     //TODO: zamienić na enum i wprowadzić validację
@@ -22,6 +23,24 @@ public class Lecturer {
 
 //    @NotBlank
     private String lastName;
+
+    ///////////////////
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
 
     public long getEmployeeId() {
         return employeeId;
