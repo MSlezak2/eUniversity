@@ -3,10 +3,14 @@ package pl.mslezak2.euniversity;
 import org.springframework.web.bind.annotation.*;
 import pl.mslezak2.euniversity.data.Course;
 import pl.mslezak2.euniversity.data.Lecturer;
+import pl.mslezak2.euniversity.data.Mail;
 import pl.mslezak2.euniversity.data.Student;
 import pl.mslezak2.euniversity.repositories.CourseRepository;
 import pl.mslezak2.euniversity.repositories.LecturerRepository;
 import pl.mslezak2.euniversity.repositories.StudentRepository;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 public class Controller {
@@ -73,6 +77,26 @@ public class Controller {
 
         return course;
 
+    }
+
+    @PostMapping("/email")
+    public boolean sendEmail(@ModelAttribute @Valid Mail mail, HttpServletRequest gRequest){
+
+        String responseToken = gRequest.getParameter("g-recaptcha-response");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(mail.getRecipient());
+        message.setText(mail.getMessageText());
+        message.setFrom(mail.getSender());
+        message.setSubject(mail.getSubject());
+        try {
+            mailSender.send(message);
+        } catch (MailException me) {
+            System.out.println(me.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
 }
